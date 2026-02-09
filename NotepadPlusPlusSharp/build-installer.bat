@@ -55,7 +55,7 @@ echo ========================================
 echo   Build Complete!
 echo ========================================
 
-set "InstallerPath=%OutputDir%\NotepadPlusPlusSharp_Setup_1.1.0.exe"
+set "InstallerPath=%OutputDir%\NotepadPlusPlusSharp_Setup_1.1.1.exe"
 if exist "%InstallerPath%" (
     echo   Installer: %InstallerPath%
 )

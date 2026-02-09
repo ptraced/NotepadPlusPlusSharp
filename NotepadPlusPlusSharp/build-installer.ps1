@@ -70,7 +70,7 @@ Write-Host ""
 Write-Host "========================================" -ForegroundColor Green
 Write-Host "  Build Complete!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
-$installerPath = Join-Path $outputDir "NotepadPlusPlusSharp_Setup_1.1.0.exe"
+$installerPath = Join-Path $outputDir "NotepadPlusPlusSharp_Setup_1.1.1.exe"
 if (Test-Path $installerPath) {
     $installerSize = [math]::Round((Get-Item $installerPath).Length / 1MB, 1)
     Write-Host "  Installer: $installerPath" -ForegroundColor White
