@@ -46,6 +46,7 @@ public static class SessionManager
 
     private static readonly string SessionFilePath = Path.Combine(SettingsDir, "session.json");
     private static readonly string BackupSessionFilePath = Path.Combine(SettingsDir, "session.backup.json");
+    private const long MaxSessionFileSize = 100 * 1024 * 1024;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -73,30 +74,30 @@ public static class SessionManager
         catch { }
     }
 
+    private static SessionData? TryLoadFrom(string path)
+    {
+        if (!File.Exists(path))
+            return null;
+
+        var info = new FileInfo(path);
+        if (info.Length > MaxSessionFileSize)
+            return null;
+
+        var json = File.ReadAllText(path);
+        return JsonSerializer.Deserialize<SessionData>(json);
+    }
+
     public static SessionData? Load()
     {
         try
         {
-            var path = SessionFilePath;
-
-            if (!File.Exists(path))
-                path = BackupSessionFilePath;
-
-            if (!File.Exists(path))
-                return null;
-
-            var json = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<SessionData>(json);
+            return TryLoadFrom(SessionFilePath) ?? TryLoadFrom(BackupSessionFilePath);
         }
         catch
         {
             try
             {
-                if (File.Exists(BackupSessionFilePath))
-                {
-                    var json = File.ReadAllText(BackupSessionFilePath);
-                    return JsonSerializer.Deserialize<SessionData>(json);
-                }
+                return TryLoadFrom(BackupSessionFilePath);
             }
             catch { }
 

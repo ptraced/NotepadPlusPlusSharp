@@ -11,6 +11,7 @@ public static class RecentFilesManager
 
     private static readonly string RecentFilesPath = Path.Combine(SettingsDir, "recent_files.json");
     private const int MaxRecentFiles = 15;
+    private const long MaxRecentFileSize = 1 * 1024 * 1024;
 
     public static List<string> Load()
     {
@@ -18,6 +19,10 @@ public static class RecentFilesManager
         {
             if (File.Exists(RecentFilesPath))
             {
+                var info = new FileInfo(RecentFilesPath);
+                if (info.Length > MaxRecentFileSize)
+                    return new List<string>();
+
                 var json = File.ReadAllText(RecentFilesPath);
                 return JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
             }

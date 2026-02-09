@@ -29,9 +29,7 @@
             A modern Notepad++ clone built with C# and WPF
         </TextBlock>
 
-        <TextBlock Grid.Row="2" FontSize="13" Margin="0,0,0,8">
-            <Run Text="Version: 1.0.0" />
-        </TextBlock>
+        <TextBlock x:Name="VersionText" Grid.Row="2" FontSize="13" Margin="0,0,0,8"/>
 
         <TextBlock Grid.Row="3" FontSize="13" Margin="0,0,0,8" TextWrapping="Wrap">
             <Run Text="Built with .NET and AvalonEdit" />

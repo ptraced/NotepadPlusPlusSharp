@@ -107,6 +107,10 @@ public class DocumentModel : INotifyPropertyChanged
 
     public bool AutoDetectLanguage { get; set; } = true;
 
+    public bool IsLargeFile { get; set; }
+
+    public long FileSize { get; set; }
+
     public double FontSize
     {
         get => _fontSize;

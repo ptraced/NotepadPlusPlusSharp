@@ -31,6 +31,8 @@ public partial class MainWindow : Window
     private bool _suppressTabChanged;
     private const double DefaultFontSize = 14.0;
     private const double ZoomStep = 2.0;
+    private const long LargeFileThreshold = 10 * 1024 * 1024;
+    private const int EncodingSampleSize = 64 * 1024;
     private bool _wordWrap;
     private bool _showWhiteSpace;
     private bool _showEndOfLine;
@@ -216,7 +218,7 @@ public partial class MainWindow : Window
                 UpdateTitle();
             }
 
-            if (doc.AutoDetectLanguage)
+            if (doc.AutoDetectLanguage && !doc.IsLargeFile)
                 ScheduleAutoDetect(doc, editor);
         };
 
@@ -244,6 +246,12 @@ public partial class MainWindow : Window
         if (_foldingManagers.TryGetValue(doc, out var existingFm) && existingFm != null)
         {
             try { FoldingManager.Uninstall(existingFm); } catch { }
+        }
+
+        if (doc.IsLargeFile)
+        {
+            _foldingManagers[doc] = null;
+            return;
         }
 
         if (doc.SyntaxHighlighting != null)
@@ -372,7 +380,14 @@ public partial class MainWindow : Window
         {
             if (doc.FilePath != null)
             {
-                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{doc.FilePath}\"");
+                var psi = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    UseShellExecute = false,
+                };
+                psi.ArgumentList.Add("/select,");
+                psi.ArgumentList.Add(doc.FilePath);
+                System.Diagnostics.Process.Start(psi);
             }
         }));
 
@@ -426,8 +441,77 @@ public partial class MainWindow : Window
         editor?.Focus();
     }
 
-    public void OpenFile(string filePath)
+    private static readonly HashSet<string> ReservedDeviceNames = new(StringComparer.OrdinalIgnoreCase)
     {
+        "CON", "PRN", "AUX", "NUL",
+        "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+    };
+
+    private static readonly HashSet<string> BinaryExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".exe", ".dll", ".so", ".dylib", ".bin", ".obj", ".o", ".a", ".lib",
+        ".pdb", ".ilk", ".exp", ".com", ".sys", ".drv", ".ocx", ".cpl", ".scr",
+        ".msi", ".msp", ".msm", ".cab",
+        ".iso", ".img", ".vhd", ".vhdx", ".vmdk",
+        ".zip", ".7z", ".rar", ".gz", ".tar", ".bz2", ".xz", ".zst", ".lz4",
+        ".jar", ".war", ".ear", ".apk", ".aab", ".ipa", ".deb", ".rpm", ".snap",
+        ".class", ".pyc", ".pyo", ".wasm",
+        ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
+        ".odt", ".ods", ".odp",
+        ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".tif", ".tiff",
+        ".webp", ".avif", ".heic", ".heif", ".raw", ".cr2", ".nef", ".psd",
+        ".mp3", ".wav", ".flac", ".aac", ".ogg", ".wma", ".m4a", ".opus",
+        ".mp4", ".mkv", ".avi", ".mov", ".wmv", ".flv", ".webm", ".m4v",
+        ".ttf", ".otf", ".woff", ".woff2", ".eot",
+        ".sqlite", ".db", ".mdb", ".accdb",
+        ".dat", ".pak", ".asset", ".unity3d", ".unitypackage",
+    };
+
+    private static bool IsBinaryFile(string filePath)
+    {
+        var ext = Path.GetExtension(filePath);
+        return !string.IsNullOrEmpty(ext) && BinaryExtensions.Contains(ext);
+    }
+
+    private static bool IsUnsafePath(string filePath)
+    {
+        try
+        {
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            if (ReservedDeviceNames.Contains(fileName))
+                return true;
+
+            var fullPath = Path.GetFullPath(filePath);
+            if (!fullPath.StartsWith(@"\\?\") && fullPath.Contains('\0'))
+                return true;
+
+            return false;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
+    public async void OpenFile(string filePath)
+    {
+        if (IsUnsafePath(filePath))
+        {
+            MessageBox.Show("Cannot open this file path.", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        if (IsBinaryFile(filePath))
+        {
+            MessageBox.Show(
+                $"'{Path.GetFileName(filePath)}' appears to be a binary file and cannot be opened as text.",
+                "Binary File",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         var existing = _documents.FirstOrDefault(d =>
             string.Equals(d.FilePath, filePath, StringComparison.OrdinalIgnoreCase));
         if (existing != null)
@@ -438,9 +522,20 @@ public partial class MainWindow : Window
 
         try
         {
-            var encoding = DetectEncoding(filePath);
-            var content = File.ReadAllText(filePath, encoding);
-            var lineEnding = DetectLineEnding(content);
+            var fileInfo = new FileInfo(filePath);
+            long fileSize = fileInfo.Exists ? fileInfo.Length : 0;
+            bool isLargeFile = fileSize > LargeFileThreshold;
+
+            if (isLargeFile)
+                ShowLoadingOverlay($"Opening {fileInfo.Name} ({FormatFileSize(fileSize)})...");
+
+            var (encoding, content, lineEnding) = await Task.Run(() =>
+            {
+                var enc = DetectEncoding(filePath);
+                var text = File.ReadAllText(filePath, enc);
+                var le = DetectLineEnding(text);
+                return (enc, text, le);
+            });
 
             if (_documents.Count == 1 && !_documents[0].IsModified &&
                 _documents[0].FilePath == null && _documents[0].Document.TextLength == 0)
@@ -448,7 +543,27 @@ public partial class MainWindow : Window
                 CloseDocument(_documents[0], force: true);
             }
 
-            var doc = CreateNewDocument(filePath);
+            DocumentModel doc;
+            if (isLargeFile)
+            {
+                doc = CreateNewDocument(null);
+                doc.FilePath = filePath;
+                doc.Language = SyntaxHighlightingManager.GetLanguageNameByExtension(filePath);
+                doc.IsLargeFile = true;
+                doc.FileSize = fileSize;
+                doc.AutoDetectLanguage = false;
+
+                if (_editors.TryGetValue(doc, out var largeEditor))
+                {
+                    largeEditor.SyntaxHighlighting = null;
+                }
+            }
+            else
+            {
+                doc = CreateNewDocument(filePath);
+                doc.FileSize = fileSize;
+            }
+
             doc.Encoding = encoding;
             doc.LineEnding = lineEnding;
 
@@ -457,7 +572,7 @@ public partial class MainWindow : Window
             doc.IsModified = false;
             _suppressTabChanged = false;
 
-            if (doc.AutoDetectLanguage && _editors.TryGetValue(doc, out var ed))
+            if (!isLargeFile && doc.AutoDetectLanguage && _editors.TryGetValue(doc, out var ed))
             {
                 RunAutoDetect(doc, ed);
                 if (doc.SyntaxHighlighting != null)
@@ -472,12 +587,38 @@ public partial class MainWindow : Window
 
             RecentFilesManager.AddFile(filePath);
             LoadRecentFiles();
+
+            if (isLargeFile)
+                HideLoadingOverlay();
         }
         catch (Exception ex)
         {
+            HideLoadingOverlay();
             MessageBox.Show($"Error opening file:\n{ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private void ShowLoadingOverlay(string message)
+    {
+        LoadingText.Text = message;
+        LoadingOverlay.Visibility = Visibility.Visible;
+    }
+
+    private void HideLoadingOverlay()
+    {
+        LoadingOverlay.Visibility = Visibility.Collapsed;
+    }
+
+    private static string FormatFileSize(long bytes)
+    {
+        if (bytes >= 1024 * 1024 * 1024)
+            return $"{bytes / (1024.0 * 1024 * 1024):F1} GB";
+        if (bytes >= 1024 * 1024)
+            return $"{bytes / (1024.0 * 1024):F1} MB";
+        if (bytes >= 1024)
+            return $"{bytes / 1024.0:F1} KB";
+        return $"{bytes} B";
     }
 
     private void SaveDocument(DocumentModel doc)
@@ -1270,7 +1411,9 @@ public partial class MainWindow : Window
 
         var length = editor.Document.TextLength;
         var lineCount = editor.Document.LineCount;
-        StatusFileInfo.Text = $"{length:N0} chars, {lineCount:N0} lines";
+        var sizeDisplay = doc.FileSize > 0 ? $" ({FormatFileSize(doc.FileSize)})" : "";
+        var largeTag = doc.IsLargeFile ? " [Large File Mode]" : "";
+        StatusFileInfo.Text = $"{length:N0} chars, {lineCount:N0} lines{sizeDisplay}{largeTag}";
     }
 
     private void UpdateTitle()
@@ -1323,7 +1466,7 @@ public partial class MainWindow : Window
                     AutoDetectLanguage = doc.AutoDetectLanguage,
                 };
 
-                if (doc.FilePath == null || doc.IsModified)
+                if (doc.FilePath == null || (doc.IsModified && !doc.IsLargeFile))
                 {
                     tab.Content = doc.Document.Text;
                 }
@@ -1408,7 +1551,27 @@ public partial class MainWindow : Window
 
         if (tab.FilePath != null && File.Exists(tab.FilePath))
         {
-            doc = CreateNewDocument(tab.FilePath);
+            var fileInfo = new FileInfo(tab.FilePath);
+            long fileSize = fileInfo.Length;
+            bool isLargeFile = fileSize > LargeFileThreshold;
+
+            if (isLargeFile)
+            {
+                doc = CreateNewDocument(null);
+                doc.FilePath = tab.FilePath;
+                doc.Language = SyntaxHighlightingManager.GetLanguageNameByExtension(tab.FilePath);
+                doc.IsLargeFile = true;
+                doc.FileSize = fileSize;
+                doc.AutoDetectLanguage = false;
+
+                if (_editors.TryGetValue(doc, out var largeEd))
+                    largeEd.SyntaxHighlighting = null;
+            }
+            else
+            {
+                doc = CreateNewDocument(tab.FilePath);
+                doc.FileSize = fileSize;
+            }
 
             var encoding = DetectEncoding(tab.FilePath);
             var content = File.ReadAllText(tab.FilePath, encoding);
@@ -1463,7 +1626,8 @@ public partial class MainWindow : Window
         }
 
         doc.FontSize = tab.FontSize;
-        doc.AutoDetectLanguage = tab.AutoDetectLanguage;
+        if (!doc.IsLargeFile)
+            doc.AutoDetectLanguage = tab.AutoDetectLanguage;
         doc.Language = tab.Language;
 
         SetEncodingFromName(doc, tab.EncodingName);
@@ -1566,7 +1730,7 @@ public partial class MainWindow : Window
     private static Encoding DetectEncoding(string filePath)
     {
         var bom = new byte[4];
-        using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
             _ = fs.ReadAtLeast(bom, 4, throwOnEndOfStream: false);
         }
@@ -1580,9 +1744,13 @@ public partial class MainWindow : Window
 
         try
         {
-            var bytes = File.ReadAllBytes(filePath);
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var sampleSize = (int)Math.Min(fs.Length, EncodingSampleSize);
+            var sample = new byte[sampleSize];
+            _ = fs.ReadAtLeast(sample, sampleSize, throwOnEndOfStream: false);
+
             var utf8 = new UTF8Encoding(false, true);
-            utf8.GetString(bytes);
+            utf8.GetString(sample);
             return new UTF8Encoding(false);
         }
         catch
@@ -1593,11 +1761,15 @@ public partial class MainWindow : Window
 
     private static string DetectLineEnding(string content)
     {
-        if (content.Contains("\r\n"))
+        var sample = content.Length > 8192
+            ? content.AsSpan(0, 8192)
+            : content.AsSpan();
+
+        if (sample.Contains("\r\n".AsSpan(), StringComparison.Ordinal))
             return "Windows (CR LF)";
-        if (content.Contains('\r'))
+        if (sample.Contains("\r".AsSpan(), StringComparison.Ordinal))
             return "Macintosh (CR)";
-        if (content.Contains('\n'))
+        if (sample.Contains("\n".AsSpan(), StringComparison.Ordinal))
             return "Unix (LF)";
         return "Windows (CR LF)";
     }
