@@ -1,6 +1,6 @@
 #define MyAppName "Notepad++ #"
 #define MyAppNameShort "NotepadPlusPlusSharp"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "NotepadPlusPlusSharp"
 #define MyAppURL "https://github.com/ptraced/NotepadPlusPlusSharp"
 #define MyAppExeName "NotepadPlusPlusSharp.exe"
