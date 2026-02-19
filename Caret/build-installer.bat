@@ -3,7 +3,7 @@ setlocal
 
 echo.
 echo ========================================
-echo   Building Notepad++ # Installer
+echo   Building Caret Installer
 echo ========================================
 echo.
 
@@ -17,14 +17,14 @@ if exist "%OutputDir%" rmdir /s /q "%OutputDir%"
 mkdir "%OutputDir%"
 
 echo [2/4] Publishing self-contained executable...
-dotnet publish "%ProjectDir%NotepadPlusPlusSharp.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none -p:DebugSymbols=false
+dotnet publish "%ProjectDir%Caret.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none -p:DebugSymbols=false
 if %errorlevel% neq 0 (
     echo ERROR: dotnet publish failed!
     pause
     exit /b 1
 )
 
-if not exist "%PublishDir%\NotepadPlusPlusSharp.exe" (
+if not exist "%PublishDir%\Caret.exe" (
     echo ERROR: Published exe not found!
     pause
     exit /b 1
@@ -55,7 +55,7 @@ echo ========================================
 echo   Build Complete!
 echo ========================================
 
-set "InstallerPath=%OutputDir%\NotepadPlusPlusSharp_Setup_1.1.1.exe"
+set "InstallerPath=%OutputDir%\Caret_Setup_1.1.1.exe"
 if exist "%InstallerPath%" (
     echo   Installer: %InstallerPath%
 )

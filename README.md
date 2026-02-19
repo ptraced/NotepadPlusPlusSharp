@@ -1,4 +1,4 @@
-# NotepadPlusPlusSharp #
+# Caret
 
 A fast, dark-mode text editor for Windows built from scratch in C# / WPF.
 
@@ -6,7 +6,7 @@ A fast, dark-mode text editor for Windows built from scratch in C# / WPF.
 
 In early 2026, [Kaspersky reported](https://securelist.com/notepad-supply-chain-attack/118708/) that the Notepad++ update infrastructure had been compromised for months — from roughly June through December 2025. Attackers pushed malicious updates to real users, targeting government orgs, financial institutions, and individuals across multiple countries. The infection chains rotated constantly, making the whole thing hard to detect.
 
-After reading that, I didn't feel great about running Notepad++ anymore. So I built my own replacement. NotepadPlusPlusSharp # does everything I actually used Notepad++ for, without depending on someone else's update pipeline.
+After reading that, I didn't feel great about running Notepad++ anymore. So I built my own replacement. Caret does everything I actually used Notepad++ for, without depending on someone else's update pipeline.
 
 ## Features
 
@@ -22,7 +22,7 @@ After reading that, I didn't feel great about running Notepad++ anymore. So I bu
 - Word wrap, whitespace/EOL visualization, indent guides, line numbers
 
 **Session persistence**
-- Remembers everything on exit, just like Notepad++ does — open tabs, unsaved content, cursor positions, scroll offsets, zoom levels, window size/position, and all editor settings
+- Remembers everything on exit — open tabs, unsaved content, cursor positions, scroll offsets, zoom levels, window size/position, and all editor settings
 - No "do you want to save?" on close. Just reopen and pick up where you left off.
 
 **File handling**
@@ -62,7 +62,7 @@ After reading that, I didn't feel great about running Notepad++ anymore. So I bu
 - Windows installer (Inno Setup)
 - Desktop shortcut
 - Start menu entry
-- Right-click context menu: "Edit with Notepad++ #" on any file or folder
+- Right-click context menu: "Edit with Caret" on any file or folder
 
 ## Build
 

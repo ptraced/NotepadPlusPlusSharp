@@ -1,7 +1,7 @@
 using System.Text;
 using System.Windows;
 
-namespace NotepadPlusPlusSharp;
+namespace Caret;
 
 public partial class App : Application
 {

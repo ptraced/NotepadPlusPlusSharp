@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace NotepadPlusPlusSharp.Helpers;
+namespace Caret.Helpers;
 
 public class RelayCommand : ICommand
 {

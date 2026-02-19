@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Windows;
 
-namespace NotepadPlusPlusSharp.Dialogs;
+namespace Caret.Dialogs;
 
 public partial class AboutWindow : Window
 {

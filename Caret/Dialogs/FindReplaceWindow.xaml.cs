@@ -4,7 +4,7 @@ using System.Windows.Input;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 
-namespace NotepadPlusPlusSharp.Dialogs;
+namespace Caret.Dialogs;
 
 public partial class FindReplaceWindow : Window
 {

@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace NotepadPlusPlusSharp.Dialogs;
+namespace Caret.Dialogs;
 
 public partial class GoToLineWindow : Window
 {

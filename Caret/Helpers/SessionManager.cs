@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NotepadPlusPlusSharp.Helpers;
+namespace Caret.Helpers;
 
 public class SessionTab
 {
@@ -42,7 +42,7 @@ public static class SessionManager
 {
     private static readonly string SettingsDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "NotepadPlusPlusSharp");
+        "Caret");
 
     private static readonly string SessionFilePath = Path.Combine(SettingsDir, "session.json");
     private static readonly string BackupSessionFilePath = Path.Combine(SettingsDir, "session.backup.json");

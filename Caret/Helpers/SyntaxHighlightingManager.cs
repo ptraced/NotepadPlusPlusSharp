@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ICSharpCode.AvalonEdit.Highlighting;
 
-namespace NotepadPlusPlusSharp.Helpers;
+namespace Caret.Helpers;
 
 public static class SyntaxHighlightingManager
 {

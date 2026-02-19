@@ -1,6 +1,6 @@
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  Building Notepad++ # Installer" -ForegroundColor Cyan
+Write-Host "  Building Caret Installer" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -32,7 +32,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 Pop-Location
 
-$exePath = Join-Path $publishDir "NotepadPlusPlusSharp.exe"
+$exePath = Join-Path $publishDir "Caret.exe"
 if (-not (Test-Path $exePath)) {
     Write-Host "ERROR: Published exe not found at $exePath" -ForegroundColor Red
     exit 1
@@ -70,7 +70,7 @@ Write-Host ""
 Write-Host "========================================" -ForegroundColor Green
 Write-Host "  Build Complete!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green
-$installerPath = Join-Path $outputDir "NotepadPlusPlusSharp_Setup_1.1.1.exe"
+$installerPath = Join-Path $outputDir "Caret_Setup_1.1.1.exe"
 if (Test-Path $installerPath) {
     $installerSize = [math]::Round((Get-Item $installerPath).Length / 1MB, 1)
     Write-Host "  Installer: $installerPath" -ForegroundColor White

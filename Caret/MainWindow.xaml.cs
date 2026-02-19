@@ -15,11 +15,11 @@ using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Search;
-using NotepadPlusPlusSharp.Dialogs;
-using NotepadPlusPlusSharp.Helpers;
-using NotepadPlusPlusSharp.Models;
+using Caret.Dialogs;
+using Caret.Helpers;
+using Caret.Models;
 
-namespace NotepadPlusPlusSharp;
+namespace Caret;
 
 public partial class MainWindow : Window
 {
@@ -687,7 +687,7 @@ public partial class MainWindow : Window
         {
             var result = MessageBox.Show(
                 $"Save changes to '{doc.FileName}'?",
-                "Notepad++ #",
+                "Caret",
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Question);
 
@@ -1421,14 +1421,14 @@ public partial class MainWindow : Window
         var doc = GetActiveDocument();
         if (doc == null)
         {
-            Title = "Notepad++ #";
+            Title = "Caret";
             return;
         }
 
         var prefix = doc.FilePath ?? doc.FileName;
         Title = doc.IsModified
-            ? $"*{prefix} - Notepad++ #"
-            : $"{prefix} - Notepad++ #";
+            ? $"*{prefix} - Caret"
+            : $"{prefix} - Caret";
     }
 
     private void SaveSession()

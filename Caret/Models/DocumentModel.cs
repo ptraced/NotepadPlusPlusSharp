@@ -5,7 +5,7 @@ using System.Text;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 
-namespace NotepadPlusPlusSharp.Models;
+namespace Caret.Models;
 
 public class DocumentModel : INotifyPropertyChanged
 {

@@ -1,9 +1,9 @@
-#define MyAppName "Notepad++ #"
-#define MyAppNameShort "NotepadPlusPlusSharp"
+#define MyAppName "Caret"
+#define MyAppNameShort "Caret"
 #define MyAppVersion "1.1.1"
-#define MyAppPublisher "NotepadPlusPlusSharp"
-#define MyAppURL "https://github.com/ptraced/NotepadPlusPlusSharp"
-#define MyAppExeName "NotepadPlusPlusSharp.exe"
+#define MyAppPublisher "Caret"
+#define MyAppURL "https://github.com/ptraced/Caret"
+#define MyAppExeName "Caret.exe"
 #define ProjectDir ".."
 #define PublishDir "..\bin\Release\net10.0-windows\win-x64\publish"
 
@@ -20,7 +20,7 @@ DefaultDirName={autopf}\{#MyAppNameShort}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=..\Output
-OutputBaseFilename=NotepadPlusPlusSharp_Setup_{#MyAppVersion}
+OutputBaseFilename=Caret_Setup_{#MyAppVersion}
 SetupIconFile={#ProjectDir}\App.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2/fast
@@ -50,12 +50,12 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFile
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\App.ico"; Tasks: desktopicon
 
 [Registry]
-Root: HKCR; Subkey: "*\shell\NotepadPlusPlusSharp"; ValueType: string; ValueName: ""; ValueData: "Edit with {#MyAppName}"; Tasks: contextmenu; Flags: uninsdeletekey
-Root: HKCR; Subkey: "*\shell\NotepadPlusPlusSharp"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\App.ico"""; Tasks: contextmenu
-Root: HKCR; Subkey: "*\shell\NotepadPlusPlusSharp\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: contextmenu; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Directory\Background\shell\NotepadPlusPlusSharp"; ValueType: string; ValueName: ""; ValueData: "Open {#MyAppName}"; Tasks: contextmenu; Flags: uninsdeletekey
-Root: HKCR; Subkey: "Directory\Background\shell\NotepadPlusPlusSharp"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\App.ico"""; Tasks: contextmenu
-Root: HKCR; Subkey: "Directory\Background\shell\NotepadPlusPlusSharp\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"""; Tasks: contextmenu; Flags: uninsdeletekey
+Root: HKCR; Subkey: "*\shell\Caret"; ValueType: string; ValueName: ""; ValueData: "Edit with {#MyAppName}"; Tasks: contextmenu; Flags: uninsdeletekey
+Root: HKCR; Subkey: "*\shell\Caret"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\App.ico"""; Tasks: contextmenu
+Root: HKCR; Subkey: "*\shell\Caret\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""; Tasks: contextmenu; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Directory\Background\shell\Caret"; ValueType: string; ValueName: ""; ValueData: "Open {#MyAppName}"; Tasks: contextmenu; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Directory\Background\shell\Caret"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\App.ico"""; Tasks: contextmenu
+Root: HKCR; Subkey: "Directory\Background\shell\Caret\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"""; Tasks: contextmenu; Flags: uninsdeletekey
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

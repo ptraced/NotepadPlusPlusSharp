@@ -1,13 +1,13 @@
 using System.IO;
 using System.Text.Json;
 
-namespace NotepadPlusPlusSharp.Helpers;
+namespace Caret.Helpers;
 
 public static class RecentFilesManager
 {
     private static readonly string SettingsDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "NotepadPlusPlusSharp");
+        "Caret");
 
     private static readonly string RecentFilesPath = Path.Combine(SettingsDir, "recent_files.json");
     private const int MaxRecentFiles = 15;

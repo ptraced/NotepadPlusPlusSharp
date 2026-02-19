@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace NotepadPlusPlusSharp.Converters;
+namespace Caret.Converters;
 
 public class BoolToVisibilityConverter : IValueConverter
 {

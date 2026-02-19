@@ -7,14 +7,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <AssemblyName>NotepadPlusPlusSharp</AssemblyName>
-    <RootNamespace>NotepadPlusPlusSharp</RootNamespace>
+    <AssemblyName>Caret</AssemblyName>
+    <RootNamespace>Caret</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>App.ico</ApplicationIcon>
     <Version>1.1.0</Version>
-    <Product>Notepad++ #</Product>
-    <Company>NotepadPlusPlusSharp</Company>
-    <Description>A modern dark-mode Notepad++ clone built in C# / WPF</Description>
+    <Product>Caret</Product>
+    <Company>Caret</Company>
+    <Description>A modern dark-mode text editor built in C# / WPF</Description>
     <Copyright>2026</Copyright>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
