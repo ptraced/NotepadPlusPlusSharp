@@ -37,6 +37,8 @@
                 </MenuItem>
                 <MenuItem Header="Clear Recent Files List" Click="ClearRecentFiles_Click"/>
                 <Separator/>
+                <MenuItem Header="_Backup Manager..." InputGestureText="Ctrl+B" Click="BackupManager_Click"/>
+                <Separator/>
                 <MenuItem Header="E_xit" InputGestureText="Alt+F4" Click="Exit_Click"/>
             </MenuItem>
 

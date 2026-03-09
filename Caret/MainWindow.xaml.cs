@@ -92,6 +92,7 @@ public partial class MainWindow : Window
                 case Key.G: GoToLine_Click(sender, e); e.Handled = true; break;
                 case Key.D: DuplicateLine_Click(sender, e); e.Handled = true; break;
                 case Key.P: Print_Click(sender, e); e.Handled = true; break;
+                case Key.B: BackupManager_Click(sender, e); e.Handled = true; break;
                 case Key.OemPlus: case Key.Add: ZoomIn_Click(sender, e); e.Handled = true; break;
                 case Key.OemMinus: case Key.Subtract: ZoomOut_Click(sender, e); e.Handled = true; break;
                 case Key.D0: case Key.NumPad0: ResetZoom_Click(sender, e); e.Handled = true; break;
@@ -1386,6 +1387,45 @@ public partial class MainWindow : Window
             if (answer == MessageBoxResult.Yes)
                 UpdateChecker.OpenReleasesPage();
         }
+    }
+
+    private void BackupManager_Click(object sender, RoutedEventArgs e)
+    {
+        var backupWindow = new BackupWindow(
+            getActiveDocument: GetActiveDocument,
+            getActiveContent: () => GetActiveEditor()?.Text,
+            onRestore: (content, fileName, language) =>
+            {
+                var doc = CreateNewDocument();
+                doc.FileName = fileName;
+
+                _suppressTabChanged = true;
+                doc.Document.Text = content;
+                doc.IsModified = true;
+                _suppressTabChanged = false;
+
+                if (!string.IsNullOrEmpty(language) && language != "Normal Text")
+                {
+                    var highlighting = SyntaxHighlightingManager.GetHighlightingByName(language);
+                    if (highlighting != null)
+                    {
+                        doc.SyntaxHighlighting = highlighting;
+                        doc.Language = language;
+                        if (_editors.TryGetValue(doc, out var ed))
+                        {
+                            ed.SyntaxHighlighting = highlighting;
+                            SetupFolding(doc, ed);
+                        }
+                    }
+                }
+
+                UpdateTabHeader(doc);
+                UpdateTitle();
+                UpdateStatusBar();
+                UpdateLanguageMenu();
+            })
+        { Owner = this };
+        backupWindow.ShowDialog();
     }
 
     private void About_Click(object sender, RoutedEventArgs e)
