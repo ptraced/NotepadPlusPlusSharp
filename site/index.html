@@ -295,6 +295,7 @@
   <ul>
     <li><a href="#why">Why</a></li>
     <li><a href="#features">Features</a></li>
+    <li><a href="#security">Security</a></li>
     <li><a href="#languages">Languages</a></li>
     <li><a href="#install">Download</a></li>
     <li><a href="https://github.com/re4/Caret">GitHub</a></li>
@@ -440,6 +441,36 @@
   </div>
 </section>
 
+<!-- SECURITY / BACKUPS -->
+<section class="why" id="security">
+  <div class="why-content">
+    <div class="section-label">Security</div>
+    <h2 class="section-title">Encrypted backups, explained.</h2>
+    <p>
+      Caret lets you back up any open document to a local MongoDB instance.
+      Before anything is written to the database, your file content is encrypted
+      on your machine using <strong>AES-256-GCM</strong> — the same authenticated
+      encryption standard used by governments and financial institutions.
+    </p>
+    <p>
+      Your password never touches the database. It's fed through
+      <strong>PBKDF2-SHA512</strong> with <strong>600,000 iterations</strong> and
+      a random salt to derive the encryption key. Each backup gets its own salt
+      and nonce, so even identical files produce completely different ciphertext.
+    </p>
+    <p>
+      Everything happens locally. No cloud, no third-party service, no network
+      calls. You own the database, you own the password, you own the data. If you
+      lose the password, the backups are unrecoverable by design.
+    </p>
+    <p>
+      Open the Backup Manager with <strong>Ctrl+B</strong> to create, browse,
+      restore, or delete backups. It's built into the editor — no external tools
+      required.
+    </p>
+  </div>
+</section>
+
 <!-- LANGUAGES -->
 <section class="lang-section" id="languages">
   <div class="container">
@@ -473,9 +504,7 @@
       <span class="lang-tag">YAML</span>
       <span class="lang-tag">TOML</span>
       <span class="lang-tag">Dockerfile</span>
-      <span class="lang-tag">F#</span>
-      <span class="lang-tag">VB.NET</span>
-      <span class="lang-tag">TeX</span>
+      <span class="lang-tag">Diff / Patch</span>
       <span class="lang-tag">+ more</span>
     </div>
   </div>
