@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace Caret.Helpers;
@@ -577,5 +578,168 @@ public static class SyntaxHighlightingManager
         }
 
         return languages;
+    }
+
+    private static readonly Dictionary<string, Color> DarkThemeNamedColors = new(StringComparer.OrdinalIgnoreCase)
+    {
+        // Comments — muted green
+        ["Comment"]              = Color.FromRgb(0x6A, 0x99, 0x55),
+        ["DocComment"]           = Color.FromRgb(0x6A, 0x99, 0x55),
+
+        // Strings & chars — warm orange
+        ["String"]               = Color.FromRgb(0xCE, 0x91, 0x78),
+        ["Char"]                 = Color.FromRgb(0xCE, 0x91, 0x78),
+
+        // Numbers — pale green
+        ["NumberLiteral"]        = Color.FromRgb(0xB5, 0xCE, 0xA8),
+        ["Digits"]               = Color.FromRgb(0xB5, 0xCE, 0xA8),
+
+        // Preprocessor — purple
+        ["Preprocessor"]         = Color.FromRgb(0xC5, 0x86, 0xC0),
+
+        // Punctuation / operators — light gray (same as editor foreground)
+        ["Punctuation"]          = Color.FromRgb(0xD4, 0xD4, 0xD4),
+
+        // Method / function calls — pale yellow
+        ["MethodCall"]           = Color.FromRgb(0xDC, 0xDC, 0xAA),
+        ["FunctionDefinition"]   = Color.FromRgb(0xDC, 0xDC, 0xAA),
+        ["BuiltinFunction"]      = Color.FromRgb(0xDC, 0xDC, 0xAA),
+
+        // C# / general keywords — blue
+        ["Keywords"]             = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["GotoKeywords"]         = Color.FromRgb(0xC5, 0x86, 0xC0),
+        ["ContextKeywords"]      = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["ExceptionKeywords"]    = Color.FromRgb(0xC5, 0x86, 0xC0),
+        ["CheckedKeyword"]       = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["UnsafeKeywords"]       = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["ValueTypeKeywords"]    = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["ReferenceTypeKeywords"]= Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["ThisOrBaseReference"]  = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["NullOrValueKeywords"]  = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["ParameterModifiers"]   = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["Modifiers"]            = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["Visibility"]           = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["NamespaceKeywords"]    = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["GetSetAddRemove"]      = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["TrueFalse"]            = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["TypeKeywords"]         = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["Keyword"]              = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["IntrinsicKeywords"]    = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["Imports"]              = Color.FromRgb(0xC5, 0x86, 0xC0),
+
+        // XML / HTML
+        ["XmlTag"]               = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["XmlDeclaration"]       = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["DocType"]              = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["HtmlTag"]              = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["Tags"]                 = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["Slash"]                = Color.FromRgb(0x80, 0x80, 0x80),
+        ["AttributeName"]        = Color.FromRgb(0x9C, 0xDC, 0xFE),
+        ["AttributeValue"]       = Color.FromRgb(0xCE, 0x91, 0x78),
+        ["Entity"]               = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["BrokenEntity"]         = Color.FromRgb(0xF4, 0x47, 0x47),
+        ["CData"]                = Color.FromRgb(0xCE, 0x91, 0x78),
+        ["Assignment"]           = Color.FromRgb(0xD4, 0xD4, 0xD4),
+
+        // CSS
+        ["Selector"]             = Color.FromRgb(0xD7, 0xBA, 0x7D),
+        ["Class"]                = Color.FromRgb(0xD7, 0xBA, 0x7D),
+        ["Property"]             = Color.FromRgb(0x9C, 0xDC, 0xFE),
+        ["Value"]                = Color.FromRgb(0xCE, 0x91, 0x78),
+        ["CurlyBraces"]          = Color.FromRgb(0xD4, 0xD4, 0xD4),
+        ["Colon"]                = Color.FromRgb(0xD4, 0xD4, 0xD4),
+
+        // Regex
+        ["Regex"]                = Color.FromRgb(0xD1, 0x69, 0x69),
+
+        // Python
+        ["ClassDefinition"]      = Color.FromRgb(0x4E, 0xC9, 0xB0),
+        ["ClassName"]            = Color.FromRgb(0x4E, 0xC9, 0xB0),
+
+        // PowerShell
+        ["Command"]              = Color.FromRgb(0xDC, 0xDC, 0xAA),
+        ["Variable"]             = Color.FromRgb(0x9C, 0xDC, 0xFE),
+
+        // Diff/Patch
+        ["AddedText"]            = Color.FromRgb(0x6A, 0x99, 0x55),
+        ["RemovedText"]          = Color.FromRgb(0xF4, 0x47, 0x47),
+        ["UnchangedText"]        = Color.FromRgb(0xD4, 0xD4, 0xD4),
+        ["Position"]             = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["Header"]               = Color.FromRgb(0xC5, 0x86, 0xC0),
+        ["FileName"]             = Color.FromRgb(0xDC, 0xDC, 0xAA),
+
+        // TeX
+        ["TexCommand"]           = Color.FromRgb(0x56, 0x9C, 0xD6),
+        ["MathMode"]             = Color.FromRgb(0xB5, 0xCE, 0xA8),
+        ["CurlyBracket"]         = Color.FromRgb(0xD4, 0xD4, 0xD4),
+    };
+
+    public static void ApplyDarkThemeColors()
+    {
+        try
+        {
+            foreach (var definition in HighlightingManager.Instance.HighlightingDefinitions)
+            {
+                foreach (var color in definition.NamedHighlightingColors)
+                {
+                    if (color.Name != null && DarkThemeNamedColors.TryGetValue(color.Name, out var mapped))
+                    {
+                        color.Foreground = new SimpleHighlightingBrush(mapped);
+                    }
+                    else
+                    {
+                        AdjustIfTooDark(color);
+                    }
+                }
+
+                RemapRuleSet(definition.MainRuleSet, new HashSet<HighlightingRuleSet>());
+            }
+        }
+        catch { }
+    }
+
+    private static void RemapRuleSet(HighlightingRuleSet? ruleSet, HashSet<HighlightingRuleSet> visited)
+    {
+        if (ruleSet == null || !visited.Add(ruleSet)) return;
+
+        foreach (var rule in ruleSet.Rules)
+        {
+            if (rule.Color is { Name: null })
+                AdjustIfTooDark(rule.Color);
+        }
+
+        foreach (var span in ruleSet.Spans)
+        {
+            if (span.SpanColor is { Name: null })
+                AdjustIfTooDark(span.SpanColor);
+            if (span.StartColor is { Name: null })
+                AdjustIfTooDark(span.StartColor);
+            if (span.EndColor is { Name: null })
+                AdjustIfTooDark(span.EndColor);
+
+            RemapRuleSet(span.RuleSet, visited);
+        }
+    }
+
+    private static void AdjustIfTooDark(HighlightingColor color)
+    {
+        try
+        {
+            if (color.Foreground == null) return;
+
+            var brush = color.Foreground.GetBrush(null!);
+            if (brush is SolidColorBrush scb)
+            {
+                var c = scb.Color;
+                double luminance = 0.299 * c.R + 0.587 * c.G + 0.114 * c.B;
+                if (luminance < 100)
+                {
+                    byte Lighten(byte v) => (byte)Math.Min(255, v + 120);
+                    color.Foreground = new SimpleHighlightingBrush(
+                        Color.FromRgb(Lighten(c.R), Lighten(c.G), Lighten(c.B)));
+                }
+            }
+        }
+        catch { }
     }
 }

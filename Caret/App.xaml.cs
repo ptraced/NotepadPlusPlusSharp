@@ -1,5 +1,6 @@
 using System.Text;
 using System.Windows;
+using Caret.Helpers;
 
 namespace Caret;
 
@@ -11,6 +12,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        SyntaxHighlightingManager.ApplyDarkThemeColors();
 
         if (e.Args.Length > 0)
         {
