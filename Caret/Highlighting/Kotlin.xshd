@@ -1,0 +1,63 @@
+<SyntaxDefinition name="Kotlin" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="#6A9955" />
+  <Color name="String" foreground="#CE9178" />
+  <Color name="NumberLiteral" foreground="#B5CEA8" />
+  <Color name="Keywords" foreground="#569CD6" />
+  <Color name="ControlKeywords" foreground="#C586C0" />
+  <Color name="TypeKeywords" foreground="#4EC9B0" />
+  <Color name="MethodCall" foreground="#DCDCAA" />
+  <Color name="Preprocessor" foreground="#C586C0" />
+
+  <RuleSet>
+    <Span color="Comment" begin="//" />
+    <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+
+    <Span color="String" multiline="true" begin="&quot;&quot;&quot;" end="&quot;&quot;&quot;" />
+    <Span color="String" begin="&quot;" end="&quot;">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+    <Span color="String" begin="'" end="'">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Keywords color="ControlKeywords">
+      <Word>if</Word><Word>else</Word><Word>when</Word><Word>for</Word>
+      <Word>while</Word><Word>do</Word><Word>break</Word><Word>continue</Word>
+      <Word>return</Word><Word>throw</Word><Word>try</Word><Word>catch</Word>
+      <Word>finally</Word>
+    </Keywords>
+
+    <Keywords color="Keywords">
+      <Word>abstract</Word><Word>actual</Word><Word>annotation</Word><Word>as</Word>
+      <Word>by</Word><Word>class</Word><Word>companion</Word><Word>const</Word>
+      <Word>constructor</Word><Word>crossinline</Word><Word>data</Word>
+      <Word>enum</Word><Word>expect</Word><Word>external</Word><Word>false</Word>
+      <Word>final</Word><Word>fun</Word><Word>get</Word><Word>import</Word>
+      <Word>in</Word><Word>infix</Word><Word>init</Word><Word>inline</Word>
+      <Word>inner</Word><Word>interface</Word><Word>internal</Word><Word>is</Word>
+      <Word>lateinit</Word><Word>noinline</Word><Word>null</Word><Word>object</Word>
+      <Word>open</Word><Word>operator</Word><Word>out</Word><Word>override</Word>
+      <Word>package</Word><Word>private</Word><Word>protected</Word><Word>public</Word>
+      <Word>reified</Word><Word>sealed</Word><Word>set</Word><Word>super</Word>
+      <Word>suspend</Word><Word>tailrec</Word><Word>this</Word><Word>true</Word>
+      <Word>typealias</Word><Word>val</Word><Word>var</Word><Word>vararg</Word>
+    </Keywords>
+
+    <Keywords color="TypeKeywords">
+      <Word>Boolean</Word><Word>Byte</Word><Word>Char</Word><Word>Double</Word>
+      <Word>Float</Word><Word>Int</Word><Word>Long</Word><Word>Short</Word>
+      <Word>String</Word><Word>Unit</Word><Word>Nothing</Word><Word>Any</Word>
+      <Word>Array</Word><Word>List</Word><Word>Map</Word><Word>Set</Word>
+      <Word>MutableList</Word><Word>MutableMap</Word><Word>MutableSet</Word>
+    </Keywords>
+
+    <Rule color="Preprocessor">@\w+</Rule>
+    <Rule color="MethodCall">\b[\w]+(?=\s*\()</Rule>
+    <Rule color="NumberLiteral">\b0[xX][0-9a-fA-F_]+[Ll]?\b</Rule>
+    <Rule color="NumberLiteral">\b[0-9][0-9_]*\.?[0-9_]*([eE][+-]?[0-9_]+)?[fFdDlL]?\b</Rule>
+  </RuleSet>
+</SyntaxDefinition>

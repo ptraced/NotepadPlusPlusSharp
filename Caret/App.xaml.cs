@@ -12,6 +12,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        SyntaxHighlightingManager.RegisterCustomHighlightings();
         SyntaxHighlightingManager.ApplyDarkThemeColors();
 
         if (e.Args.Length > 0)

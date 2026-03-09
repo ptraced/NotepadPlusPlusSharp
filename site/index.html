@@ -16,7 +16,7 @@
     --text: #CCCCCC;
     --text-bright: #E8E8E8;
     --text-dim: #808080;
-    --border: #2D2D30;
+    --border: #3F3F46;
     --green: #6A9955;
     --orange: #CCA700;
     --red: #F44747;
@@ -118,7 +118,7 @@
   }
   .mockup-tab {
     padding: .3rem .85rem; font-size: .75rem; color: var(--text-dim);
-    background: transparent; border-right: 1px solid #3F3F46;
+    background: transparent; border-right: 1px solid var(--border);
   }
   .mockup-tab.active {
     background: var(--bg-card); color: var(--text-bright);
@@ -133,7 +133,7 @@
   }
   .mockup-line:hover { background: rgba(255,255,255,.03); }
   .ln {
-    color: #5A5A5A; width: 2.5rem; text-align: right;
+    color: #858585; width: 2.5rem; text-align: right;
     padding-right: .75rem; user-select: none; flex-shrink: 0;
   }
   .kw { color: #569CD6; }
@@ -317,7 +317,7 @@
       View source
     </a>
   </div>
-  <p class="version">v1.1.2 &middot; ~2 MB &middot; Windows 10/11 &middot; GPL-3.0</p>
+  <p class="version">v1.2.0 &middot; ~2 MB &middot; Windows 10/11 &middot; GPL-3.0</p>
 
   <div style="height: 4rem;"></div>
 
@@ -394,7 +394,7 @@
       <div class="feature-card">
         <div class="feature-icon">🎨</div>
         <h3>Syntax highlighting</h3>
-        <p>20+ languages out of the box. Auto-detects the language from file content when there's no extension. No config needed.</p>
+        <p>25+ languages out of the box. Auto-detects the language from file content when there's no extension. No config needed.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">📑</div>
@@ -425,6 +425,11 @@
         <div class="feature-icon">🔒</div>
         <h3>No telemetry</h3>
         <p>Zero network calls. No analytics, no crash reports sent anywhere, no update checks. The editor works offline because it doesn't know what online is.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Encrypted backups</h3>
+        <p>Back up any document to a local MongoDB instance with AES-256-GCM encryption. Your files are encrypted with a password-derived key (PBKDF2, 600k iterations) before they ever touch the database. Browse, restore, and manage backups from the built-in Backup Manager.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">📌</div>
@@ -460,6 +465,14 @@
       <span class="lang-tag">PowerShell</span>
       <span class="lang-tag">Batch</span>
       <span class="lang-tag">Markdown</span>
+      <span class="lang-tag">Rust</span>
+      <span class="lang-tag">Go</span>
+      <span class="lang-tag">Kotlin</span>
+      <span class="lang-tag">Swift</span>
+      <span class="lang-tag">Shell / Bash</span>
+      <span class="lang-tag">YAML</span>
+      <span class="lang-tag">TOML</span>
+      <span class="lang-tag">Dockerfile</span>
       <span class="lang-tag">F#</span>
       <span class="lang-tag">VB.NET</span>
       <span class="lang-tag">TeX</span>
@@ -487,6 +500,7 @@
       <div class="kb-row"><span>Zoom in</span><span class="kb-key">Ctrl+Scroll</span></div>
       <div class="kb-row"><span>New tab</span><span class="kb-key">Ctrl+N</span></div>
       <div class="kb-row"><span>Close tab</span><span class="kb-key">Ctrl+W</span></div>
+      <div class="kb-row"><span>Backup Manager</span><span class="kb-key">Ctrl+B</span></div>
     </div>
   </div>
 </section>

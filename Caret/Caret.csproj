@@ -11,13 +11,14 @@
     <RootNamespace>Caret</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>App.ico</ApplicationIcon>
-    <Version>1.1.2</Version>
+    <Version>1.2.0</Version>
     <Product>Caret</Product>
     <Company>Caret</Company>
     <Description>A modern dark-mode text editor built in C# / WPF</Description>
     <Copyright>2026</Copyright>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +37,10 @@
 
   <ItemGroup>
     <Resource Include="Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Highlighting\*.xshd" />
   </ItemGroup>
 
 </Project>

@@ -9,31 +9,21 @@ namespace Caret.Models;
 
 public class DocumentModel : INotifyPropertyChanged
 {
-    private static int _newDocumentCount = 0;
-
-    private string? _filePath;
+    private static int _newDocumentCount;
     private string _fileName;
-    private bool _isModified;
-    private Encoding _encoding = new UTF8Encoding(false);
-    private string _language = "Normal Text";
-    private IHighlightingDefinition? _syntaxHighlighting;
-    private TextDocument _document;
-    private string _lineEnding = "Windows (CR LF)";
-    private double _fontSize = 14;
 
     public DocumentModel()
     {
         _newDocumentCount++;
         _fileName = $"new {_newDocumentCount}";
-        _document = new TextDocument();
     }
 
     public string? FilePath
     {
-        get => _filePath;
+        get => field;
         set
         {
-            _filePath = value;
+            field = value;
             if (value != null)
                 _fileName = Path.GetFileName(value);
             OnPropertyChanged();
@@ -52,58 +42,58 @@ public class DocumentModel : INotifyPropertyChanged
 
     public bool IsModified
     {
-        get => _isModified;
-        set { _isModified = value; OnPropertyChanged(); OnPropertyChanged(nameof(Title)); }
+        get => field;
+        set { field = value; OnPropertyChanged(); OnPropertyChanged(nameof(Title)); }
     }
 
     public Encoding Encoding
     {
-        get => _encoding;
-        set { _encoding = value; OnPropertyChanged(); OnPropertyChanged(nameof(EncodingName)); }
-    }
+        get => field;
+        set { field = value; OnPropertyChanged(); OnPropertyChanged(nameof(EncodingName)); }
+    } = new UTF8Encoding(false);
 
     public string EncodingName
     {
         get
         {
-            if (_encoding is UTF8Encoding utf8)
+            if (Encoding is UTF8Encoding utf8)
                 return utf8.GetPreamble().Length > 0 ? "UTF-8-BOM" : "UTF-8";
-            if (_encoding.CodePage == 1252 || _encoding.CodePage == 0)
+            if (Encoding.CodePage == 1252 || Encoding.CodePage == 0)
                 return "ANSI";
-            if (_encoding is UnicodeEncoding unicode)
+            if (Encoding is UnicodeEncoding unicode)
             {
                 var preamble = unicode.GetPreamble();
                 if (preamble.Length >= 2 && preamble[0] == 0xFF)
                     return "UCS-2 LE BOM";
                 return "UCS-2 BE BOM";
             }
-            return _encoding.EncodingName;
+            return Encoding.EncodingName;
         }
     }
 
     public string Language
     {
-        get => _language;
-        set { _language = value; OnPropertyChanged(); }
-    }
+        get => field;
+        set { field = value; OnPropertyChanged(); }
+    } = "Normal Text";
 
     public IHighlightingDefinition? SyntaxHighlighting
     {
-        get => _syntaxHighlighting;
-        set { _syntaxHighlighting = value; OnPropertyChanged(); }
+        get => field;
+        set { field = value; OnPropertyChanged(); }
     }
 
     public TextDocument Document
     {
-        get => _document;
-        set { _document = value; OnPropertyChanged(); }
-    }
+        get => field;
+        set { field = value; OnPropertyChanged(); }
+    } = new();
 
     public string LineEnding
     {
-        get => _lineEnding;
-        set { _lineEnding = value; OnPropertyChanged(); }
-    }
+        get => field;
+        set { field = value; OnPropertyChanged(); }
+    } = "Windows (CR LF)";
 
     public bool AutoDetectLanguage { get; set; } = true;
 
@@ -113,9 +103,9 @@ public class DocumentModel : INotifyPropertyChanged
 
     public double FontSize
     {
-        get => _fontSize;
-        set { _fontSize = Math.Max(6, Math.Min(72, value)); OnPropertyChanged(); }
-    }
+        get => field;
+        set { field = Math.Max(6, Math.Min(72, value)); OnPropertyChanged(); }
+    } = 14;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

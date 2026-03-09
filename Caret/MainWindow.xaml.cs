@@ -23,7 +23,7 @@ namespace Caret;
 
 public partial class MainWindow : Window
 {
-    private readonly List<DocumentModel> _documents = new();
+    private readonly List<DocumentModel> _documents = [];
     private readonly Dictionary<DocumentModel, TextEditor> _editors = new();
     private readonly Dictionary<DocumentModel, FoldingManager?> _foldingManagers = new();
     private readonly Dictionary<DocumentModel, System.Windows.Threading.DispatcherTimer> _autoDetectTimers = new();
@@ -39,8 +39,8 @@ public partial class MainWindow : Window
     private bool _showLineNumbers = true;
     private bool _showIndentGuide = true;
 
-    [DllImport("dwmapi.dll", PreserveSig = true)]
-    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+    [LibraryImport("dwmapi.dll")]
+    private static partial int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
     public MainWindow()
     {
@@ -239,6 +239,51 @@ public partial class MainWindow : Window
             }
         };
 
+        var editorContextMenu = new ContextMenu();
+
+        var undoItem = CreateContextMenuItem("Undo", () => { if (editor.CanUndo) editor.Undo(); });
+        var redoItem = CreateContextMenuItem("Redo", () => { if (editor.CanRedo) editor.Redo(); });
+        var cutItem = CreateContextMenuItem("Cut", () => editor.Cut());
+        var copyItem = CreateContextMenuItem("Copy", () => editor.Copy());
+        var pasteItem = CreateContextMenuItem("Paste", () => editor.Paste());
+        var deleteItem = CreateContextMenuItem("Delete", () =>
+        {
+            if (editor.SelectionLength > 0)
+                editor.Document.Remove(editor.SelectionStart, editor.SelectionLength);
+        });
+        var selectAllItem = CreateContextMenuItem("Select All", () => editor.SelectAll());
+
+        undoItem.InputGestureText = "Ctrl+Z";
+        redoItem.InputGestureText = "Ctrl+Y";
+        cutItem.InputGestureText = "Ctrl+X";
+        copyItem.InputGestureText = "Ctrl+C";
+        pasteItem.InputGestureText = "Ctrl+V";
+        deleteItem.InputGestureText = "Del";
+        selectAllItem.InputGestureText = "Ctrl+A";
+
+        editorContextMenu.Items.Add(undoItem);
+        editorContextMenu.Items.Add(redoItem);
+        editorContextMenu.Items.Add(new Separator());
+        editorContextMenu.Items.Add(cutItem);
+        editorContextMenu.Items.Add(copyItem);
+        editorContextMenu.Items.Add(pasteItem);
+        editorContextMenu.Items.Add(deleteItem);
+        editorContextMenu.Items.Add(new Separator());
+        editorContextMenu.Items.Add(selectAllItem);
+
+        editorContextMenu.Opened += (s, e) =>
+        {
+            bool hasSelection = editor.SelectionLength > 0;
+            undoItem.IsEnabled = editor.CanUndo;
+            redoItem.IsEnabled = editor.CanRedo;
+            cutItem.IsEnabled = hasSelection;
+            copyItem.IsEnabled = hasSelection;
+            deleteItem.IsEnabled = hasSelection;
+            pasteItem.IsEnabled = Clipboard.ContainsText();
+        };
+
+        editor.ContextMenu = editorContextMenu;
+
         SetupFolding(doc, editor);
 
         return editor;
@@ -412,9 +457,7 @@ public partial class MainWindow : Window
         {
             if (tabItem.Tag == doc && tabItem.Header is StackPanel panel)
             {
-                var titleText = panel.Children[0] as TextBlock;
-                if (titleText != null)
-                    titleText.Text = doc.Title;
+                (panel.Children[0] as TextBlock)?.Text = doc.Title;
                 break;
             }
         }
@@ -1050,16 +1093,10 @@ public partial class MainWindow : Window
     }
 
     private void FindNext_Click(object sender, RoutedEventArgs e)
-    {
-        if (_findReplaceWindow != null)
-            _findReplaceWindow.FindNext();
-    }
+        => _findReplaceWindow?.FindNext();
 
     private void FindPrevious_Click(object sender, RoutedEventArgs e)
-    {
-        if (_findReplaceWindow != null)
-            _findReplaceWindow.FindPrevious();
-    }
+        => _findReplaceWindow?.FindPrevious();
 
     private void Replace_Click(object sender, RoutedEventArgs e)
     {
@@ -1893,7 +1930,7 @@ public class BraceFoldingStrategy
 
     private IEnumerable<NewFolding> CreateNewFoldings(TextDocument document)
     {
-        var foldings = new List<NewFolding>();
+        List<NewFolding> foldings = [];
         var stack = new Stack<int>();
 
         for (int i = 0; i < document.TextLength; i++)

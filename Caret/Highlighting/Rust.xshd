@@ -1,0 +1,66 @@
+<SyntaxDefinition name="Rust" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="#6A9955" />
+  <Color name="String" foreground="#CE9178" />
+  <Color name="Char" foreground="#CE9178" />
+  <Color name="NumberLiteral" foreground="#B5CEA8" />
+  <Color name="Keywords" foreground="#569CD6" />
+  <Color name="ControlKeywords" foreground="#C586C0" />
+  <Color name="TypeKeywords" foreground="#4EC9B0" />
+  <Color name="MethodCall" foreground="#DCDCAA" />
+  <Color name="Preprocessor" foreground="#C586C0" />
+  <Color name="Punctuation" foreground="#D4D4D4" />
+  <Color name="Variable" foreground="#9CDCFE" />
+
+  <RuleSet>
+    <Span color="Comment" begin="//" />
+    <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+
+    <Span color="String" multiline="true" begin="r#&quot;" end="&quot;#" />
+    <Span color="String" begin="&quot;" end="&quot;">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+    <Span color="Char" begin="'" end="'">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Keywords color="ControlKeywords">
+      <Word>if</Word><Word>else</Word><Word>match</Word><Word>loop</Word>
+      <Word>while</Word><Word>for</Word><Word>in</Word><Word>break</Word>
+      <Word>continue</Word><Word>return</Word><Word>yield</Word>
+    </Keywords>
+
+    <Keywords color="Keywords">
+      <Word>as</Word><Word>async</Word><Word>await</Word><Word>const</Word>
+      <Word>crate</Word><Word>dyn</Word><Word>enum</Word><Word>extern</Word>
+      <Word>false</Word><Word>fn</Word><Word>impl</Word><Word>let</Word>
+      <Word>mod</Word><Word>move</Word><Word>mut</Word><Word>pub</Word>
+      <Word>ref</Word><Word>self</Word><Word>Self</Word><Word>static</Word>
+      <Word>struct</Word><Word>super</Word><Word>trait</Word><Word>true</Word>
+      <Word>type</Word><Word>union</Word><Word>unsafe</Word><Word>use</Word>
+      <Word>where</Word><Word>macro_rules</Word>
+    </Keywords>
+
+    <Keywords color="TypeKeywords">
+      <Word>bool</Word><Word>char</Word><Word>f32</Word><Word>f64</Word>
+      <Word>i8</Word><Word>i16</Word><Word>i32</Word><Word>i64</Word><Word>i128</Word>
+      <Word>isize</Word><Word>str</Word><Word>u8</Word><Word>u16</Word>
+      <Word>u32</Word><Word>u64</Word><Word>u128</Word><Word>usize</Word>
+      <Word>String</Word><Word>Vec</Word><Word>Box</Word><Word>Rc</Word>
+      <Word>Arc</Word><Word>Option</Word><Word>Result</Word><Word>Some</Word>
+      <Word>None</Word><Word>Ok</Word><Word>Err</Word><Word>HashMap</Word>
+      <Word>HashSet</Word><Word>BTreeMap</Word><Word>BTreeSet</Word>
+    </Keywords>
+
+    <Rule color="Preprocessor">\#\!\[.*?\]</Rule>
+    <Rule color="Preprocessor">\#\[.*?\]</Rule>
+    <Rule color="MethodCall">\b[\w]+(?=\s*\()</Rule>
+    <Rule color="NumberLiteral">\b0[xX][0-9a-fA-F_]+\b</Rule>
+    <Rule color="NumberLiteral">\b0[oO][0-7_]+\b</Rule>
+    <Rule color="NumberLiteral">\b0[bB][01_]+\b</Rule>
+    <Rule color="NumberLiteral">\b[0-9][0-9_]*\.?[0-9_]*([eE][+-]?[0-9_]+)?(f32|f64|i8|i16|i32|i64|i128|u8|u16|u32|u64|u128|isize|usize)?\b</Rule>
+  </RuleSet>
+</SyntaxDefinition>

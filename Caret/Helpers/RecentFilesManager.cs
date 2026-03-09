@@ -21,14 +21,14 @@ public static class RecentFilesManager
             {
                 var info = new FileInfo(RecentFilesPath);
                 if (info.Length > MaxRecentFileSize)
-                    return new List<string>();
+                    return [];
 
                 var json = File.ReadAllText(RecentFilesPath);
-                return JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
+                return JsonSerializer.Deserialize(json, CaretJsonContext.Default.ListString) ?? [];
             }
         }
         catch { }
-        return new List<string>();
+        return [];
     }
 
     public static void Save(List<string> recentFiles)
@@ -36,7 +36,7 @@ public static class RecentFilesManager
         try
         {
             Directory.CreateDirectory(SettingsDir);
-            var json = JsonSerializer.Serialize(recentFiles, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(recentFiles, CaretJsonContext.Default.ListString);
             File.WriteAllText(RecentFilesPath, json);
         }
         catch { }
@@ -55,6 +55,6 @@ public static class RecentFilesManager
 
     public static void ClearAll()
     {
-        Save(new List<string>());
+        Save([]);
     }
 }

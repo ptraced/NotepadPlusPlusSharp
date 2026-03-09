@@ -1,0 +1,29 @@
+<SyntaxDefinition name="Dockerfile" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="#6A9955" />
+  <Color name="String" foreground="#CE9178" />
+  <Color name="Keywords" foreground="#569CD6" />
+  <Color name="Variable" foreground="#9CDCFE" />
+  <Color name="Punctuation" foreground="#D4D4D4" />
+
+  <RuleSet>
+    <Span color="Comment" begin="#" />
+    <Span color="String" begin="&quot;" end="&quot;">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+    <Span color="String" begin="'" end="'" />
+
+    <Keywords color="Keywords">
+      <Word>FROM</Word><Word>AS</Word><Word>RUN</Word><Word>CMD</Word>
+      <Word>LABEL</Word><Word>MAINTAINER</Word><Word>EXPOSE</Word><Word>ENV</Word>
+      <Word>ADD</Word><Word>COPY</Word><Word>ENTRYPOINT</Word><Word>VOLUME</Word>
+      <Word>USER</Word><Word>WORKDIR</Word><Word>ARG</Word><Word>ONBUILD</Word>
+      <Word>STOPSIGNAL</Word><Word>HEALTHCHECK</Word><Word>SHELL</Word>
+      <Word>NONE</Word>
+    </Keywords>
+
+    <Rule color="Variable">\$\{[\w]+\}</Rule>
+    <Rule color="Variable">\$[\w]+</Rule>
+  </RuleSet>
+</SyntaxDefinition>

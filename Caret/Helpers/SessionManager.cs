@@ -1,6 +1,5 @@
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Caret.Helpers;
 
@@ -23,7 +22,7 @@ public class SessionTab
 
 public class SessionData
 {
-    public List<SessionTab> Tabs { get; set; } = new();
+    public List<SessionTab> Tabs { get; set; } = [];
     public int ActiveTabIndex { get; set; }
     public double WindowLeft { get; set; } = 100;
     public double WindowTop { get; set; } = 100;
@@ -48,12 +47,6 @@ public static class SessionManager
     private static readonly string BackupSessionFilePath = Path.Combine(SettingsDir, "session.backup.json");
     private const long MaxSessionFileSize = 100 * 1024 * 1024;
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-    };
-
     public static void Save(SessionData session)
     {
         try
@@ -61,7 +54,7 @@ public static class SessionManager
             Directory.CreateDirectory(SettingsDir);
 
             var tempPath = SessionFilePath + ".tmp";
-            var json = JsonSerializer.Serialize(session, JsonOptions);
+            var json = JsonSerializer.Serialize(session, CaretJsonContext.Default.SessionData);
             File.WriteAllText(tempPath, json);
 
             if (File.Exists(SessionFilePath))
@@ -84,7 +77,7 @@ public static class SessionManager
             return null;
 
         var json = File.ReadAllText(path);
-        return JsonSerializer.Deserialize<SessionData>(json);
+        return JsonSerializer.Deserialize(json, CaretJsonContext.Default.SessionData);
     }
 
     public static SessionData? Load()

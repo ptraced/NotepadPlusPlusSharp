@@ -1,0 +1,63 @@
+<SyntaxDefinition name="Swift" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="#6A9955" />
+  <Color name="String" foreground="#CE9178" />
+  <Color name="NumberLiteral" foreground="#B5CEA8" />
+  <Color name="Keywords" foreground="#569CD6" />
+  <Color name="ControlKeywords" foreground="#C586C0" />
+  <Color name="TypeKeywords" foreground="#4EC9B0" />
+  <Color name="MethodCall" foreground="#DCDCAA" />
+  <Color name="Preprocessor" foreground="#C586C0" />
+
+  <RuleSet>
+    <Span color="Comment" begin="//" />
+    <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+
+    <Span color="String" multiline="true" begin="&quot;&quot;&quot;" end="&quot;&quot;&quot;" />
+    <Span color="String" begin="&quot;" end="&quot;">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Keywords color="ControlKeywords">
+      <Word>if</Word><Word>else</Word><Word>guard</Word><Word>switch</Word>
+      <Word>case</Word><Word>default</Word><Word>for</Word><Word>in</Word>
+      <Word>while</Word><Word>repeat</Word><Word>break</Word><Word>continue</Word>
+      <Word>return</Word><Word>throw</Word><Word>throws</Word><Word>rethrows</Word>
+      <Word>try</Word><Word>catch</Word><Word>do</Word><Word>defer</Word>
+      <Word>where</Word><Word>fallthrough</Word>
+    </Keywords>
+
+    <Keywords color="Keywords">
+      <Word>as</Word><Word>async</Word><Word>await</Word><Word>class</Word>
+      <Word>deinit</Word><Word>enum</Word><Word>extension</Word><Word>false</Word>
+      <Word>fileprivate</Word><Word>func</Word><Word>import</Word><Word>init</Word>
+      <Word>inout</Word><Word>internal</Word><Word>is</Word><Word>lazy</Word>
+      <Word>let</Word><Word>mutating</Word><Word>nil</Word><Word>nonmutating</Word>
+      <Word>open</Word><Word>operator</Word><Word>override</Word><Word>private</Word>
+      <Word>protocol</Word><Word>public</Word><Word>required</Word><Word>self</Word>
+      <Word>Self</Word><Word>static</Word><Word>struct</Word><Word>subscript</Word>
+      <Word>super</Word><Word>true</Word><Word>typealias</Word><Word>var</Word>
+      <Word>weak</Word><Word>unowned</Word><Word>some</Word><Word>any</Word>
+      <Word>associatedtype</Word><Word>convenience</Word><Word>didSet</Word>
+      <Word>willSet</Word><Word>get</Word><Word>set</Word>
+    </Keywords>
+
+    <Keywords color="TypeKeywords">
+      <Word>Bool</Word><Word>Int</Word><Word>Int8</Word><Word>Int16</Word>
+      <Word>Int32</Word><Word>Int64</Word><Word>UInt</Word><Word>UInt8</Word>
+      <Word>UInt16</Word><Word>UInt32</Word><Word>UInt64</Word>
+      <Word>Float</Word><Word>Double</Word><Word>String</Word><Word>Character</Word>
+      <Word>Array</Word><Word>Dictionary</Word><Word>Set</Word><Word>Optional</Word>
+      <Word>Void</Word><Word>Any</Word><Word>AnyObject</Word><Word>Error</Word>
+    </Keywords>
+
+    <Rule color="Preprocessor">#\w+</Rule>
+    <Rule color="Preprocessor">@\w+</Rule>
+    <Rule color="MethodCall">\b[\w]+(?=\s*\()</Rule>
+    <Rule color="NumberLiteral">\b0[xX][0-9a-fA-F_]+\b</Rule>
+    <Rule color="NumberLiteral">\b0[oO][0-7_]+\b</Rule>
+    <Rule color="NumberLiteral">\b0[bB][01_]+\b</Rule>
+    <Rule color="NumberLiteral">\b[0-9][0-9_]*\.?[0-9_]*([eE][+-]?[0-9_]+)?\b</Rule>
+  </RuleSet>
+</SyntaxDefinition>

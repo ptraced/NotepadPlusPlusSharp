@@ -1,0 +1,64 @@
+<SyntaxDefinition name="Go" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="#6A9955" />
+  <Color name="String" foreground="#CE9178" />
+  <Color name="NumberLiteral" foreground="#B5CEA8" />
+  <Color name="Keywords" foreground="#569CD6" />
+  <Color name="ControlKeywords" foreground="#C586C0" />
+  <Color name="TypeKeywords" foreground="#4EC9B0" />
+  <Color name="MethodCall" foreground="#DCDCAA" />
+  <Color name="Punctuation" foreground="#D4D4D4" />
+  <Color name="BuiltinFunction" foreground="#DCDCAA" />
+
+  <RuleSet>
+    <Span color="Comment" begin="//" />
+    <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+
+    <Span color="String" begin="&quot;" end="&quot;">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+    <Span color="String" multiline="true" begin="`" end="`" />
+    <Span color="String" begin="'" end="'">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Keywords color="ControlKeywords">
+      <Word>if</Word><Word>else</Word><Word>switch</Word><Word>case</Word>
+      <Word>default</Word><Word>for</Word><Word>range</Word><Word>break</Word>
+      <Word>continue</Word><Word>return</Word><Word>goto</Word><Word>fallthrough</Word>
+      <Word>select</Word><Word>defer</Word><Word>go</Word>
+    </Keywords>
+
+    <Keywords color="Keywords">
+      <Word>package</Word><Word>import</Word><Word>func</Word><Word>var</Word>
+      <Word>const</Word><Word>type</Word><Word>struct</Word><Word>interface</Word>
+      <Word>map</Word><Word>chan</Word><Word>make</Word><Word>new</Word>
+      <Word>true</Word><Word>false</Word><Word>nil</Word><Word>iota</Word>
+    </Keywords>
+
+    <Keywords color="TypeKeywords">
+      <Word>bool</Word><Word>byte</Word><Word>complex64</Word><Word>complex128</Word>
+      <Word>error</Word><Word>float32</Word><Word>float64</Word>
+      <Word>int</Word><Word>int8</Word><Word>int16</Word><Word>int32</Word><Word>int64</Word>
+      <Word>rune</Word><Word>string</Word>
+      <Word>uint</Word><Word>uint8</Word><Word>uint16</Word><Word>uint32</Word><Word>uint64</Word>
+      <Word>uintptr</Word><Word>any</Word>
+    </Keywords>
+
+    <Keywords color="BuiltinFunction">
+      <Word>append</Word><Word>cap</Word><Word>clear</Word><Word>close</Word>
+      <Word>copy</Word><Word>delete</Word><Word>len</Word><Word>max</Word>
+      <Word>min</Word><Word>panic</Word><Word>print</Word><Word>println</Word>
+      <Word>recover</Word>
+    </Keywords>
+
+    <Rule color="MethodCall">\b[\w]+(?=\s*\()</Rule>
+    <Rule color="NumberLiteral">\b0[xX][0-9a-fA-F_]+\b</Rule>
+    <Rule color="NumberLiteral">\b0[oO][0-7_]+\b</Rule>
+    <Rule color="NumberLiteral">\b0[bB][01_]+\b</Rule>
+    <Rule color="NumberLiteral">\b[0-9][0-9_]*\.?[0-9_]*([eE][+-]?[0-9_]+)?\b</Rule>
+  </RuleSet>
+</SyntaxDefinition>

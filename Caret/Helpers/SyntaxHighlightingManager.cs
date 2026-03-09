@@ -1,7 +1,10 @@
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
+using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
 namespace Caret.Helpers;
 
@@ -34,13 +37,18 @@ public static class SyntaxHighlightingManager
         { ".ps1", "PowerShell" }, { ".psm1", "PowerShell" }, { ".psd1", "PowerShell" },
         { ".bat", "BAT" }, { ".cmd", "BAT" },
         { ".fs", "F#" }, { ".fsi", "F#" }, { ".fsx", "F#" },
-        { ".yml", "XML" }, { ".yaml", "XML" },
+        { ".rs", "Rust" },
+        { ".go", "Go" },
+        { ".kt", "Kotlin" }, { ".kts", "Kotlin" },
+        { ".swift", "Swift" },
+        { ".yml", "YAML" }, { ".yaml", "YAML" },
+        { ".toml", "TOML" },
+        { ".dockerfile", "Dockerfile" },
+        { ".sh", "ShellScript" }, { ".bash", "ShellScript" }, { ".zsh", "ShellScript" },
+        { ".fish", "ShellScript" }, { ".ksh", "ShellScript" },
         { ".ini", "INI" }, { ".cfg", "INI" }, { ".conf", "INI" },
         { ".patch", "Patch" }, { ".diff", "Patch" },
         { ".tex", "TeX" }, { ".latex", "TeX" }, { ".sty", "TeX" }, { ".cls", "TeX" },
-        { ".asp", "ASP/XHTML" }, { ".aspx", "ASP/XHTML" },
-        { ".boo", "Boo" },
-        { ".atg", "Coco" },
     };
 
     private static readonly Dictionary<string, string> LanguageDisplayNames = new(StringComparer.OrdinalIgnoreCase)
@@ -64,9 +72,19 @@ public static class SyntaxHighlightingManager
         { "INI", "INI" },
         { "Patch", "Diff / Patch" },
         { "TeX", "TeX / LaTeX" },
-        { "ASP/XHTML", "ASP.NET" },
-        { "Boo", "Boo" },
-        { "Coco", "Coco/R" },
+        { "Rust", "Rust" },
+        { "Go", "Go" },
+        { "Kotlin", "Kotlin" },
+        { "Swift", "Swift" },
+        { "YAML", "YAML" },
+        { "TOML", "TOML" },
+        { "Dockerfile", "Dockerfile" },
+        { "ShellScript", "Shell / Bash" },
+    };
+
+    private static readonly HashSet<string> HiddenLanguages = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Boo", "Coco", "ASP/XHTML", "XmlDoc", "MarkDownWithFontSize", "VB",
     };
 
     private static bool RxMatch(string input, [System.Diagnostics.CodeAnalysis.StringSyntax("Regex")] string pattern, RegexOptions options = RegexOptions.None)
@@ -523,6 +541,11 @@ public static class SyntaxHighlightingManager
 
     public static IHighlightingDefinition? GetHighlightingByExtension(string filePath)
     {
+        var fileName = Path.GetFileName(filePath);
+        if (fileName.StartsWith("Dockerfile", StringComparison.OrdinalIgnoreCase) ||
+            fileName.Equals("Containerfile", StringComparison.OrdinalIgnoreCase))
+            return HighlightingManager.Instance.GetDefinition("Dockerfile");
+
         var ext = Path.GetExtension(filePath);
         if (string.IsNullOrEmpty(ext))
             return null;
@@ -553,6 +576,11 @@ public static class SyntaxHighlightingManager
 
     public static string GetLanguageNameByExtension(string filePath)
     {
+        var fileName = Path.GetFileName(filePath);
+        if (fileName.StartsWith("Dockerfile", StringComparison.OrdinalIgnoreCase) ||
+            fileName.Equals("Containerfile", StringComparison.OrdinalIgnoreCase))
+            return "Dockerfile";
+
         var ext = Path.GetExtension(filePath);
         if (string.IsNullOrEmpty(ext))
             return "Normal Text";
@@ -573,6 +601,8 @@ public static class SyntaxHighlightingManager
 
         foreach (var def in HighlightingManager.Instance.HighlightingDefinitions.OrderBy(d => d.Name))
         {
+            if (HiddenLanguages.Contains(def.Name))
+                continue;
             var displayName = GetLanguageDisplayName(def.Name);
             languages.Add((displayName, def.Name));
         }
@@ -673,6 +703,39 @@ public static class SyntaxHighlightingManager
         ["MathMode"]             = Color.FromRgb(0xB5, 0xCE, 0xA8),
         ["CurlyBracket"]         = Color.FromRgb(0xD4, 0xD4, 0xD4),
     };
+
+    private static readonly string[] CustomHighlightings =
+    [
+        "Rust", "Go", "Kotlin", "Swift", "YAML", "TOML", "Dockerfile", "ShellScript",
+    ];
+
+    public static void RegisterCustomHighlightings()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        foreach (var name in CustomHighlightings)
+        {
+            try
+            {
+                var resourceName = $"Caret.Highlighting.{name}.xshd";
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream == null) continue;
+
+                using var reader = new XmlTextReader(stream);
+                var definition = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                var extensions = GetExtensionsForLanguage(name);
+                HighlightingManager.Instance.RegisterHighlighting(name, extensions, definition);
+            }
+            catch { }
+        }
+    }
+
+    private static string[] GetExtensionsForLanguage(string language)
+    {
+        return ExtensionToLanguageMap
+            .Where(kv => string.Equals(kv.Value, language, StringComparison.OrdinalIgnoreCase))
+            .Select(kv => kv.Key)
+            .ToArray();
+    }
 
     public static void ApplyDarkThemeColors()
     {

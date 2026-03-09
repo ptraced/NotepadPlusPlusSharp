@@ -1,0 +1,57 @@
+<SyntaxDefinition name="ShellScript" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="#6A9955" />
+  <Color name="String" foreground="#CE9178" />
+  <Color name="NumberLiteral" foreground="#B5CEA8" />
+  <Color name="Keywords" foreground="#569CD6" />
+  <Color name="ControlKeywords" foreground="#C586C0" />
+  <Color name="BuiltinFunction" foreground="#DCDCAA" />
+  <Color name="Variable" foreground="#9CDCFE" />
+  <Color name="Punctuation" foreground="#D4D4D4" />
+
+  <RuleSet>
+    <Span color="Comment" begin="#" />
+    <Span color="String" begin="&quot;" end="&quot;">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+    <Span color="String" begin="'" end="'" />
+    <Span color="String" begin="$'" end="'">
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Keywords color="ControlKeywords">
+      <Word>if</Word><Word>then</Word><Word>else</Word><Word>elif</Word>
+      <Word>fi</Word><Word>for</Word><Word>while</Word><Word>until</Word>
+      <Word>do</Word><Word>done</Word><Word>case</Word><Word>esac</Word>
+      <Word>in</Word><Word>select</Word>
+    </Keywords>
+
+    <Keywords color="Keywords">
+      <Word>function</Word><Word>return</Word><Word>exit</Word><Word>break</Word>
+      <Word>continue</Word><Word>local</Word><Word>declare</Word><Word>typeset</Word>
+      <Word>export</Word><Word>readonly</Word><Word>unset</Word><Word>shift</Word>
+      <Word>set</Word><Word>source</Word><Word>eval</Word><Word>exec</Word>
+      <Word>trap</Word><Word>true</Word><Word>false</Word>
+    </Keywords>
+
+    <Keywords color="BuiltinFunction">
+      <Word>echo</Word><Word>printf</Word><Word>read</Word><Word>cd</Word>
+      <Word>pwd</Word><Word>pushd</Word><Word>popd</Word><Word>dirs</Word>
+      <Word>test</Word><Word>let</Word><Word>expr</Word><Word>basename</Word>
+      <Word>dirname</Word><Word>mkdir</Word><Word>rmdir</Word><Word>rm</Word>
+      <Word>cp</Word><Word>mv</Word><Word>ls</Word><Word>cat</Word>
+      <Word>grep</Word><Word>sed</Word><Word>awk</Word><Word>find</Word>
+      <Word>xargs</Word><Word>sort</Word><Word>uniq</Word><Word>wc</Word>
+      <Word>head</Word><Word>tail</Word><Word>chmod</Word><Word>chown</Word>
+      <Word>curl</Word><Word>wget</Word><Word>tar</Word><Word>zip</Word>
+    </Keywords>
+
+    <Rule color="Variable">\$\{[^}]+\}</Rule>
+    <Rule color="Variable">\$\([^)]+\)</Rule>
+    <Rule color="Variable">\$[\w@#\?\-\$\!]+</Rule>
+    <Rule color="NumberLiteral">\b[0-9]+\.?[0-9]*\b</Rule>
+  </RuleSet>
+</SyntaxDefinition>
