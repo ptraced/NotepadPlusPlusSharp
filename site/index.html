@@ -239,6 +239,41 @@
     border-radius: 4px; border: 1px solid var(--border);
   }
 
+  /* ── MONGO SETUP ── */
+  .mongo-setup {
+    margin-top: 2.5rem; padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .mongo-setup h3 {
+    font-size: 1.1rem; color: var(--text-bright);
+    font-weight: 600; margin-bottom: .4rem;
+  }
+  .mongo-setup .setup-note {
+    font-size: .9rem; color: var(--text-dim); margin-bottom: 1.5rem;
+  }
+  .mongo-options {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .mongo-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; text-align: center;
+  }
+  .mongo-card h4 {
+    font-size: .95rem; color: var(--text-bright);
+    font-weight: 600; margin-bottom: .3rem;
+  }
+  .mongo-card p {
+    font-size: .8rem; color: var(--text-dim); margin-bottom: .75rem;
+  }
+  .mongo-card code {
+    display: block; background: var(--bg); padding: .5rem .75rem;
+    border-radius: 5px; font-size: .78rem; color: var(--green);
+    font-family: "Cascadia Code", "Consolas", monospace;
+    border: 1px solid var(--border); word-break: break-all;
+  }
+  .mongo-card .btn { width: 100%; justify-content: center; font-size: .85rem; }
+
   /* ── INSTALL ── */
   .install {
     border-top: 1px solid var(--border);
@@ -280,11 +315,80 @@
   footer a:hover { color: var(--text-bright); }
   footer .links { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: .75rem; }
 
+  /* ── MOBILE NAV ── */
+  .nav-toggle {
+    display: none; background: none; border: none; cursor: pointer;
+    padding: .5rem; color: var(--text); line-height: 0;
+  }
+  .nav-toggle svg { width: 22px; height: 22px; }
+  .mobile-nav {
+    display: none; position: fixed; top: 52px; left: 0; right: 0;
+    z-index: 99; background: rgba(18,18,18,.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: .75rem 0;
+  }
+  .mobile-nav.open { display: block; }
+  .mobile-nav a {
+    display: block; padding: .75rem 2rem;
+    color: var(--text-dim); font-size: .95rem;
+    transition: background .15s, color .15s;
+  }
+  .mobile-nav a:hover {
+    background: var(--bg-raised); color: var(--text-bright);
+    text-decoration: none;
+  }
+
   /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
+    nav { padding: 0 1.25rem; }
     nav ul { display: none; }
-    .mockup { width: 95%; }
-    .install-card { min-width: 100%; }
+    .nav-toggle { display: block; }
+
+    .hero { padding: 5rem 1.25rem 3rem; min-height: auto; }
+    .hero h1 { font-size: 1.8rem; }
+    .hero .subtitle { font-size: 1rem; margin-top: 1rem; }
+    .hero .cta-row { margin-top: 1.75rem; flex-direction: column; align-items: center; }
+    .btn { width: 100%; max-width: 280px; justify-content: center; }
+
+    .mockup { width: 98%; margin: -1rem auto 0; border-radius: 8px; }
+    .mockup-body { font-size: .72rem; line-height: 1.6; }
+    .mockup-tabs { overflow-x: auto; }
+    .mockup-tab { white-space: nowrap; font-size: .68rem; padding: .25rem .6rem; }
+    .mockup-status { font-size: .6rem; flex-wrap: wrap; gap: .25rem; }
+    .ln { width: 2rem; padding-right: .5rem; font-size: .72rem; }
+
+    section { padding: 3rem 1.25rem; }
+    .container { padding: 0; }
+    .section-title { font-size: 1.4rem; }
+    .section-desc { font-size: .9rem; }
+
+    .why-content { padding: 0 .25rem; }
+    .why-content p { font-size: .95rem; }
+
+    .features-grid { grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+    .feature-card { padding: 1.25rem; }
+
+    .mongo-options { grid-template-columns: 1fr; }
+    .mongo-card { padding: 1.25rem; }
+    .mongo-card code { font-size: .72rem; }
+
+    .lang-grid { gap: .4rem; }
+    .lang-tag { font-size: .75rem; padding: .3rem .7rem; }
+
+    .kb-grid { grid-template-columns: 1fr; }
+
+    .install-options { flex-direction: column; align-items: center; }
+    .install-card { min-width: 100%; padding: 1.5rem; }
+
+    footer .links { flex-wrap: wrap; gap: 1rem; }
+  }
+
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 1.5rem; }
+    .mockup-body { font-size: .65rem; }
+    .mockup-tab { font-size: .6rem; }
+    .section-title { font-size: 1.2rem; }
   }
 </style>
 </head>
@@ -300,7 +404,18 @@
     <li><a href="#install">Download</a></li>
     <li><a href="https://github.com/re4/Caret">GitHub</a></li>
   </ul>
+  <button class="nav-toggle" onclick="document.getElementById('mobileNav').classList.toggle('open')" aria-label="Menu">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
 </nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#why" onclick="document.getElementById('mobileNav').classList.remove('open')">Why</a>
+  <a href="#features" onclick="document.getElementById('mobileNav').classList.remove('open')">Features</a>
+  <a href="#security" onclick="document.getElementById('mobileNav').classList.remove('open')">Security</a>
+  <a href="#languages" onclick="document.getElementById('mobileNav').classList.remove('open')">Languages</a>
+  <a href="#install" onclick="document.getElementById('mobileNav').classList.remove('open')">Download</a>
+  <a href="https://github.com/re4/Caret">GitHub</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -468,6 +583,32 @@
       restore, or delete backups. It's built into the editor — no external tools
       required.
     </p>
+
+    <div class="mongo-setup">
+      <h3>Setting up MongoDB (optional)</h3>
+      <p class="setup-note">
+        MongoDB is only needed if you want encrypted backups. Caret works perfectly fine without it.
+      </p>
+      <div class="mongo-options">
+        <div class="mongo-card">
+          <h4>Installer</h4>
+          <p>Download the MSI, pick "Complete", leave "Run as Service" checked. Done.</p>
+          <a href="https://www.mongodb.com/try/download/community" class="btn btn-primary">
+            Download MongoDB
+          </a>
+        </div>
+        <div class="mongo-card">
+          <h4>winget</h4>
+          <p>One command from any terminal.</p>
+          <code>winget install MongoDB.Server</code>
+        </div>
+        <div class="mongo-card">
+          <h4>Docker</h4>
+          <p>Run it in a container if you prefer isolation.</p>
+          <code>docker run -d -p 27017:27017 mongo</code>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -494,7 +635,6 @@
       <span class="lang-tag">SQL</span>
       <span class="lang-tag">PHP</span>
       <span class="lang-tag">PowerShell</span>
-      <span class="lang-tag">Batch</span>
       <span class="lang-tag">Markdown</span>
       <span class="lang-tag">Rust</span>
       <span class="lang-tag">Go</span>
