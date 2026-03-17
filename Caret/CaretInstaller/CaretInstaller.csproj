@@ -11,7 +11,7 @@
     <RootNamespace>CaretInstaller</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>..\App.ico</ApplicationIcon>
-    <Version>1.1.2</Version>
+    <Version>1.2.0</Version>
     <Product>Caret Setup</Product>
     <Company>Caret</Company>
     <Description>Installer for Caret text editor</Description>
