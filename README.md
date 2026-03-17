@@ -1,5 +1,8 @@
 # Caret
 
+
+<img width="266" height="266" alt="Official Icon" src="https://github.com/user-attachments/assets/7e1da1af-cfde-40dc-966b-a1e5a00518d1" />
+
 A fast, dark-mode text editor for Windows built from scratch in C# / WPF.
 
 ## Why does this exist?
