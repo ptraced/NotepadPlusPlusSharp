@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Icon.png" />
+    <Resource Include="App.ico" />
   </ItemGroup>
 
   <ItemGroup>

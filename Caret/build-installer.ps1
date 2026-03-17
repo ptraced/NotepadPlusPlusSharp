@@ -57,9 +57,7 @@ New-Item -ItemType Directory -Path $payloadTemp -Force | Out-Null
 Copy-Item $exePath $payloadTemp
 
 $icoPath = Join-Path $ProjectDir "App.ico"
-$pngPath = Join-Path $ProjectDir "Icon.png"
 if (Test-Path $icoPath) { Copy-Item $icoPath $payloadTemp }
-if (Test-Path $pngPath) { Copy-Item $pngPath $payloadTemp }
 
 Compress-Archive -Path (Join-Path $payloadTemp "*") -DestinationPath $payloadZip -Force
 Remove-Item -Recurse -Force $payloadTemp

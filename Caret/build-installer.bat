@@ -44,7 +44,6 @@ mkdir "%PayloadTemp%"
 
 copy /y "%PublishDir%\Caret.exe" "%PayloadTemp%\" >nul
 if exist "%ProjectDir%App.ico" copy /y "%ProjectDir%App.ico" "%PayloadTemp%\" >nul
-if exist "%ProjectDir%Icon.png" copy /y "%ProjectDir%Icon.png" "%PayloadTemp%\" >nul
 
 powershell -NoProfile -Command "Compress-Archive -Path '%PayloadTemp%\*' -DestinationPath '%PayloadZip%' -Force"
 if %errorlevel% neq 0 (
