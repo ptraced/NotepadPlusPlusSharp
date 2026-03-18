@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caret — A text editor that stays out of your way</title>
+<link rel="icon" type="image/x-icon" href="images/logo.ico">
+<link rel="icon" type="image/png" href="images/logo.png">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -48,7 +50,10 @@
     font-size: 1.15rem; font-weight: 700; color: var(--text-bright);
     letter-spacing: .5px;
   }
-  nav .logo span { color: var(--accent); }
+  .logo-img {
+    height: 28px; width: auto; vertical-align: middle;
+    margin-right: 4px;
+  }
   nav ul { list-style: none; display: flex; gap: 1.5rem; }
   nav ul a {
     color: var(--text-dim); font-size: .875rem; transition: color .15s;
@@ -63,6 +68,10 @@
     background:
       radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,122,204,.08), transparent),
       var(--bg);
+  }
+  .hero-logo {
+    width: 120px; height: auto; margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 24px rgba(0,122,204,.25));
   }
   .hero h1 {
     font-size: clamp(2.4rem, 5vw, 3.6rem);
@@ -395,7 +404,7 @@
 <body>
 
 <nav>
-  <div class="logo"><span>^</span> Caret</div>
+  <div class="logo"><img src="images/logo.png" alt="Caret logo" class="logo-img"> Caret</div>
   <ul>
     <li><a href="#why">Why</a></li>
     <li><a href="#features">Features</a></li>
@@ -419,6 +428,7 @@
 
 <!-- HERO -->
 <section class="hero">
+  <img src="images/logo.png" alt="Caret logo" class="hero-logo">
   <h1>A text editor that opens fast and gets out of your&nbsp;way.</h1>
   <p class="subtitle">
     Native Windows app. Dark by default. Remembers everything
