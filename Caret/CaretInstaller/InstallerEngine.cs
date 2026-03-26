@@ -239,7 +239,7 @@ internal static class InstallerEngine
         }
         using (var key = Registry.ClassesRoot.CreateSubKey($@"{ContextMenuDirKey}\command"))
         {
-            key.SetValue("", $"\"{exePath}\"");
+            key.SetValue("", $"\"{exePath}\" \"%V\"");
         }
     }
 
@@ -307,17 +307,24 @@ internal static class InstallerEngine
         if (!Directory.Exists(installPath))
             return;
 
-        string currentExe = Environment.ProcessPath ?? "";
+        string currentExe = Path.GetFullPath(Environment.ProcessPath ?? "");
 
-        foreach (var file in Directory.GetFiles(installPath))
+        foreach (var file in Directory.GetFiles(installPath, "*", SearchOption.AllDirectories))
         {
             if (string.Equals(
                     Path.GetFullPath(file),
-                    Path.GetFullPath(currentExe),
+                    currentExe,
                     StringComparison.OrdinalIgnoreCase))
                 continue;
 
             TryDeleteFile(file);
+        }
+
+        foreach (var dir in Directory.GetDirectories(installPath, "*", SearchOption.AllDirectories)
+                     .OrderByDescending(d => d.Length))
+        {
+            try { Directory.Delete(dir, false); }
+            catch { }
         }
     }
 
@@ -327,7 +334,15 @@ internal static class InstallerEngine
         if (string.IsNullOrEmpty(currentExe))
             return;
 
-        string script = $"/c timeout /t 2 /nobreak >nul & del /f /q \"{currentExe}\" & rmdir /s /q \"{installPath}\"";
+        string script =
+            $"/c " +
+            $"for /L %i in (1,1,10) do (" +
+            $"  timeout /t 1 /nobreak >nul &" +
+            $"  del /f /q \"{currentExe}\" 2>nul &" +
+            $"  if not exist \"{currentExe}\" (" +
+            $"    rmdir /s /q \"{installPath}\" & exit /b 0" +
+            $"  )" +
+            $")";
 
         Process.Start(new ProcessStartInfo
         {

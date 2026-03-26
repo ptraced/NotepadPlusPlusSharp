@@ -70,7 +70,8 @@ if not exist "%InstallerPublishDir%\CaretSetup.exe" (
 )
 
 echo [5/5] Finalizing...
-set "OutputInstaller=%OutputDir%\Caret_Setup_1.1.1.exe"
+for /f "tokens=*" %%v in ('powershell -NoProfile -Command "[xml]$x = Get-Content '%InstallerDir%\CaretInstaller.csproj'; $x.Project.PropertyGroup.Version"') do set "AppVersion=%%v"
+set "OutputInstaller=%OutputDir%\Caret_Setup_%AppVersion%.exe"
 copy /y "%InstallerPublishDir%\CaretSetup.exe" "%OutputInstaller%" >nul
 
 if exist "%PayloadZip%" del /f /q "%PayloadZip%"

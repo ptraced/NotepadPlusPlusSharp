@@ -89,7 +89,10 @@ if (-not (Test-Path $installerExe)) {
 # ── Step 5: Finalize ────────────────────────────────────────────────
 
 Write-Host "[5/5] Finalizing..." -ForegroundColor Yellow
-$outputInstaller = Join-Path $outputDir "Caret_Setup_1.1.1.exe"
+$csprojPath = Join-Path $installerDir "CaretInstaller.csproj"
+[xml]$csproj = Get-Content $csprojPath
+$version = $csproj.Project.PropertyGroup.Version
+$outputInstaller = Join-Path $outputDir "Caret_Setup_$version.exe"
 Copy-Item $installerExe $outputInstaller
 
 if (Test-Path $payloadZip) { Remove-Item -Force $payloadZip }
